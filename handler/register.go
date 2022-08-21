@@ -1,36 +1,15 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
-	"gin-cognito/infra"
-	"io/ioutil"
+	"gin-cognito/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type User struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
 func MakeNewUser(c *gin.Context) {
-	userPool := infra.NewUserPool()
-
-	jsonData, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		panic("ioutil readAll error")
-	}
-
-	user := User{}
-	err = json.Unmarshal(jsonData, &user)
-	if err != nil {
-		panic("json unmarshal error")
-	}
-
-	// user作成
-	err = userPool.Save(user.Name, user.Email)
+	err := usecase.MakeNewUser(c)
 
 	if err != nil {
 		fmt.Println("save error : ", err)
@@ -46,26 +25,8 @@ func MakeNewUser(c *gin.Context) {
 	}
 }
 
-type UserPassword struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-}
-
 func EmailTest(c *gin.Context) {
-	userPool := infra.NewUserPool()
-
-	jsonData, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		panic("ioutil readAll error")
-	}
-
-	userPassword := UserPassword{}
-	err = json.Unmarshal(jsonData, &userPassword)
-	if err != nil {
-		panic("json unmarshal error")
-	}
-
-	err = userPool.SetPassWord(userPassword.Name, userPassword.Password)
+	err := usecase.EmailTest(c)
 
 	if err != nil {
 		fmt.Println("email test error", err)
