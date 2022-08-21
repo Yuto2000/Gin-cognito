@@ -1,0 +1,29 @@
+version: "3"
+services:
+    gin-cognito-app:
+      container_name: gin-cognito-app
+      build: ./docker/go
+      tty: true
+      volumes:
+        - ./:/work
+      ports:
+        - 8080:8080
+      networks:
+        - gin-cognito-net
+    gin-cognito-db:
+      container_name: gin-cognito-db
+      build: ./docker/mysql
+      volumes:
+        - gin-cognito-db:/var/lib/mysql
+      expose:
+        - 3306
+      ports:
+        - 3306:3306
+      networks:
+        - gin-cognito-net
+
+networks:
+  gin-cognito-net:
+    driver: bridge
+volumes:
+  gin-cognito-db:
